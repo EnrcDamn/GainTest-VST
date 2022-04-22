@@ -25,6 +25,9 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void sliderValueChanged(juce::Slider* slider) override;
+    
+    juce::ScopedPointer <juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttach;
+
 
 private:
     // This reference is provided as a quick way for your editor to

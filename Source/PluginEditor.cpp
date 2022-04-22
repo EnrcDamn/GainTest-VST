@@ -17,10 +17,13 @@ GainTestAudioProcessorEditor::GainTestAudioProcessorEditor (GainTestAudioProcess
     // editor's size to whatever you need it to be.
     setSize (200, 400);
 
+    sliderAttach = new juce::AudioProcessorValueTreeState::SliderAttachment(audioProcessor.treeState, GAIN_ID, gainSlider);
+
     gainSlider.setSliderStyle(juce::Slider::LinearVertical);
     gainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 100, 25);
-    gainSlider.setRange(0.0, 1.0);
-    gainSlider.setValue(1.0);
+    gainSlider.setTextValueSuffix(" dB");
+    gainSlider.setRange(-48.0, 0.0);
+    gainSlider.setValue(-5.0);
     gainSlider.addListener(this);
     addAndMakeVisible(gainSlider);
 }
@@ -46,6 +49,6 @@ void GainTestAudioProcessorEditor::sliderValueChanged (juce::Slider *slider)
 {
     if (slider == &gainSlider)
     {
-        audioProcessor.rawVolume = gainSlider.getValue();
+        audioProcessor.gainValue = gainSlider.getValue();
     }
 }

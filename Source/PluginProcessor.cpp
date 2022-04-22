@@ -12,16 +12,20 @@
 //==============================================================================
 GainTestAudioProcessor::GainTestAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                     #endif
-                       )
+    : AudioProcessor(BusesProperties()
+#if ! JucePlugin_IsMidiEffect
+#if ! JucePlugin_IsSynth
+        .withInput("Input", juce::AudioChannelSet::stereo(), true)
+#endif
+        .withOutput("Output", juce::AudioChannelSet::stereo(), true)
+#endif
+    ),
+    gainValue(-5.0f),
+    treeState(*this, nullptr)
 #endif
 {
+    juce::NormalisableRange<float> gainRange (-48.0f, 0.0f);
+    treeState.createAndAddParameter(GAIN_ID, GAIN_NAME, "dB", gainRange, -5.0f, nullptr, nullptr);
 }
 
 GainTestAudioProcessor::~GainTestAudioProcessor()
@@ -152,11 +156,11 @@ void GainTestAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
 
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
-            channelData[sample] = buffer.getSample(channel, sample) * rawVolume;
+            channelData[sample] = buffer.getSample(channel, sample) * (pow (10, gainValue / 20));
         }
     }
 }
-
+ 
 //==============================================================================
 bool GainTestAudioProcessor::hasEditor() const
 {

@@ -9,6 +9,8 @@
 #pragma once
 
 #include <JuceHeader.h>
+#define GAIN_ID "gain"
+#define GAIN_NAME "Gain"
 
 //==============================================================================
 /**
@@ -53,7 +55,8 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    double rawVolume;
+    double gainValue;
+    juce::AudioProcessorValueTreeState treeState;
 
 private:
     //==============================================================================
